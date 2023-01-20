@@ -25,6 +25,8 @@ var questions = [{
 
 
 ]
+//var h3El2 = document.createElement("h3");
+var spanEl = document.createElement("span")
 appendHeader();
 appendStartPage();
 //*****************make header**************************** */
@@ -38,11 +40,14 @@ appendStartPage();
     var h3El2 = document.createElement("h3");
     divElHeader.setAttribute("id","header-div")
     h3El1.textContent = "View High Scores";
-    h3El2.textContent = "Time Left: " + setTimer;
+   // h3El2.textContent = "Time Left: " + setTimer;
+    h3El2.textContent = "Time Left: "
     body.appendChild(headerEl);
     headerEl.appendChild(divElHeader);
     divElHeader.appendChild(h3El1);
     divElHeader.appendChild(h3El2);
+    h3El2.appendChild(spanEl);
+    spanEl.textContent = setTimer
     //divElHeader.style.display = "flex";
     //divElHeader.style.flexWrap = "wrap";
     //divElHeader.style.justifyContent = "space-between";
@@ -75,8 +80,8 @@ function appendStartPage(){
     startSectionEl.appendChild(startPEl);
     startSectionEl.appendChild(startBtnEl);
     startBtnEl.addEventListener("click", function(){
-    console.log("click of start quiz")
-    deleteHTML(startSectionEl);
+    //console.log("click of start quiz")
+    deleteHTML();
     appendQuiz();
     })
     
@@ -103,8 +108,10 @@ function formatButton(btn){
         })
 }
 
-function deleteHTML(section){
-    section.remove()
+function deleteHTML(){
+    var sectionDelete = document.querySelector("section");
+   // console.log(sectionDelete);
+    sectionDelete.remove();
 
 }
 function appendQuiz(){
@@ -128,7 +135,7 @@ function appendQuiz(){
     }
     var divEls = document.querySelectorAll(".quiz-answers");
      //divEls[1].onclick = function(){console.log(this.getAttribute("number"))} 
-     console.log(divEls);
+    // console.log(divEls);
      for(var i = 0; i < 4; i++){
         var indEl = divEls[i]
          divEls[i].addEventListener("mouseover", function(event){
@@ -140,7 +147,7 @@ function appendQuiz(){
          })
 
          divEls[i].addEventListener("mouseout", function(event){
-            console.log("Mouse over box")
+           // console.log("Mouse over box")
            // indEl.style.backgroundColor = "red";
           var currentDiv = event.currentTarget;
            currentDiv.style.backgroundColor = "royalblue";
@@ -148,7 +155,7 @@ function appendQuiz(){
          })
 
          divEls[i].addEventListener("click", function(event){
-            console.log("You clicked me");
+            //console.log("You clicked me");
             var currentDiv = event.currentTarget;
             var answerNum = currentDiv.getAttribute("number");
             //answerNum++;
@@ -157,7 +164,9 @@ function appendQuiz(){
          })
      }
 
-     getQuestions(quizH1El,divEls);        
+     getQuestions(quizH1El,divEls);  
+     setTimer = 30;
+     timeInterval = setInterval(starTimer, 1000);      
      
 
 }
@@ -180,9 +189,11 @@ function getQuestions(quizQuestionEl,quizAnswersEl){
    else{
     //console.log(correct)
 
-       // clearInterval(timeInterval);
+        clearInterval(timeInterval);
        // setTimer = 0;
        // clearQuiz();
+       deleteHTML();
+       appendFinish();
    }
   
 }
@@ -199,6 +210,27 @@ function checkAnswer(num){
     }
 }
 //************************************************************/
+
+//****************timer function*********************** */
+function starTimer(){
+    
+  
+    spanEl.textContent = setTimer;
+    setTimer--;
+    console.log(setTimer);
+    if(setTimer === 0){
+     setTimer = 0;
+     deleteHTML();
+     appendFinish()
+      clearInterval(timeInterval);
+    }
+  }
+
+//********************************************************** */
+
+function appendFinish(){
+    alert("Quiz finished");
+}
 
 //*******************make high score***************************//
 function appendHighScores(){
