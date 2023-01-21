@@ -3,6 +3,7 @@ var timeInterval;
 var body = document.body;
 var correct = 0;
 gotRight = 0;
+var questions = []
 var scores = [];
 if(localStorage.getItem("scores") != null){
     scores = JSON.parse(localStorage.getItem("scores"));
@@ -10,7 +11,8 @@ if(localStorage.getItem("scores") != null){
 //body.style.fontFamily = "cursive"
 //body.style.color = "royalblue"
 //var sectionEl = document.createElement("section");
-var questions = [{
+function makeQuestions(){
+    questions = [{
     prompt:"What does the ! symbol stand for in JavaScript?",
     option1: "and",
     option2: "or",
@@ -48,10 +50,14 @@ var questions = [{
 
 
 ]
+}
+
 //var h3El2 = document.createElement("h3");
 var spanEl = document.createElement("span")
+
 appendHeader();
 appendStartPage();
+makeQuestions();
 //*****************make header**************************** */
  function appendHeader(){
    // var setTimer = 0;
@@ -74,7 +80,19 @@ appendStartPage();
     //divElHeader.style.display = "flex";
     //divElHeader.style.flexWrap = "wrap";
     //divElHeader.style.justifyContent = "space-between";
-    h3El1.addEventListener("click",appendHighScores);
+    //h3El1.addEventListener("click",appendHighScores);
+    h3El1.addEventListener("mouseover", function(){
+        h3El1.style.color = "red";
+        h3El1.style.cursor = "pointer";
+
+    })
+    h3El1.addEventListener("mouseout", function(){
+        h3El1.style.color = "royalblue"
+    })
+    h3El1.addEventListener("click", function(){
+        deleteHTML();
+        appendHighScores();
+    })
 
 }
 //******************************************************** */
@@ -373,12 +391,25 @@ function appendHighScores(){
    // HighScoreH4Els[1].textContent = "abc: " + "2"
    var newArr = JSON.parse(localStorage.getItem("scores"))
    newArr.reverse();
-   for(i = 0; i < 5; i++){
+   for(i = 0; i < 5 && i < newArr.length; i++){
+    
     HighScoreH4Els[i].textContent = newArr[i].init + ": " + newArr[i].scr;
    }
    HighScorebtnEl2.addEventListener("click", function(){
+    gotRight = 0;
     deleteHTML();
     appendStartPage();
+    makeQuestions();
+   })
+
+   HighScorebtnEl1.addEventListener("click", function(){
+    for(i = 0; i < 5; i++){
+        HighScoreH4Els[i].textContent = "";
+        localStorage.removeItem("scores");
+        scores = [];
+        
+
+    }
    })
 
     
