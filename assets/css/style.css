@@ -33,7 +33,7 @@ p{
   }
 
 .quiz-answers{
-    flex-direction: column;
+    /*flex-direction: column;*/
     /*height:100px;
     width:200px;*/
     width:150px;
@@ -44,3 +44,28 @@ p{
     border-radius: 10px;
 
 }
+.container2 { 
+    height: 200px;
+    position: relative;
+    
+  }
+  
+  .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+  .format-textbox{
+
+    margin-bottom: 15px;
+  }
+  .high-scores{
+    background-color: royalblue;
+    color: white;
+    width: 100px;
+   
+    
+  }
