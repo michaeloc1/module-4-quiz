@@ -2,7 +2,8 @@ var setTimer = 0;
 var timeInterval;
 var body = document.body;
 var correct = 0;
-gotRight = 0;
+var gotRight = 0;
+var lastQuestion = false;
 var questions = []
 var scores = [];
 if(localStorage.getItem("scores") != null){
@@ -258,20 +259,23 @@ function checkAnswer(num){
     console.log("Im in the checkAnswer function")
     if(correct == num){
         //console.log("Correct")
-        getH2El.textContent = "Correct"
+        getH2El.textContent = "Last answer was correct"
         gotRight++;
+        lastQuestion = true
     }
     else{
         if(setTimer < 5){
             setTimer = 0;
             spanEl.textContent = setTimer;
+            lastQuestion = false;
             clearInterval(timeInterval);
             deleteHTML();
             appendFinish();
         }
         else{
-            setTimer = setTimer - 5
-            getH2El.textContent = "Wrong"
+            setTimer = setTimer - 5;
+            getH2El.textContent = "Last answer was wrong";
+            lastQuestion = false;
         }
 
 
@@ -288,10 +292,11 @@ function starTimer(){
     setTimer--;
     console.log(setTimer);
     if(setTimer === 0){
-     setTimer = 0;
-     deleteHTML();
-     appendFinish()
-      clearInterval(timeInterval);
+        spanEl.textContent = setTimer;
+
+        deleteHTML();
+        appendFinish()
+        clearInterval(timeInterval);
     }
   }
 
@@ -302,6 +307,7 @@ function appendFinish(){
     var btn = document.createElement("button");
     var sectionEl = document.createElement("section");
     var h3El = document.createElement("H3");
+    var h3El2 = document.createElement("H3");
     var textBox = document.createElement("INPUT");
     var divContainerEl = document.createElement("div");
     var divCenterEl = document.createElement("div")
@@ -321,10 +327,23 @@ function appendFinish(){
     divCenterEl.appendChild(h3El);
     divCenterEl.appendChild(textBox);
     divCenterEl.appendChild(btn);
+    divCenterEl.appendChild(h3El2)
     h1El.textContent = "Quiz Over";
     h3El.textContent = "You got " + gotRight + " out of 4 correct";
-     btn.textContent = "Add Score";
-         btn.addEventListener("click", function(){
+    btn.textContent = "Add Score";
+    textBox.focus();
+
+    if(lastQuestion){
+        h3El2.textContent = "Last answer was correct";
+    }
+    else{
+        h3El2.textContent = "Last answer was wrong";
+        spanEl.textContent = setTimer;
+    }    
+
+
+
+     btn.addEventListener("click", function(){
         var initials = textBox.value;
 
     if(scores.length === 0){
