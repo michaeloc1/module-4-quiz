@@ -1,17 +1,29 @@
+/**************global variables****************************** */
+//setTimer will hold the countdown value
 var setTimer = 0;
+//will be set to setInerval
 var timeInterval;
 var body = document.body;
+//will hold correct answer number
 var correct = 0;
+//will hold how many questions user got right
 var gotRight = 0;
+//will hold true or false.  Used to display to user if last question answered was right or wrong
 var lastQuestion = false;
-var questions = []
+//will hold questions
+var questions = [];
+//will hod high scores
 var scores = [];
+//needed element globally to display timer
+var spanEl = document.createElement("span")
+/************************************************************* */
+
+//will store high scores from localstorage if it exists
 if(localStorage.getItem("scores") != null){
     scores = JSON.parse(localStorage.getItem("scores"));
 }
-//body.style.fontFamily = "cursive"
-//body.style.color = "royalblue"
-//var sectionEl = document.createElement("section");
+
+//makes questions to be used in quiz.  correctOption is the answer that is correct
 function makeQuestions(){
     questions = [{
     prompt:"What does the ! symbol stand for in JavaScript?",
@@ -52,25 +64,18 @@ function makeQuestions(){
 
 ]
 }
-
-//var h3El2 = document.createElement("h3");
-var spanEl = document.createElement("span")
-
+//appends header and start.  Also makes questions to be used in the quiz.
 appendHeader();
 appendStartPage();
 makeQuestions();
 //*****************make header**************************** */
  function appendHeader(){
-   // var setTimer = 0;
-   // var timeInterval;
-   // var body = document.body;
     var headerEl = document.createElement("header");
     var divElHeader = document.createElement("div");
     var h3El1 = document.createElement("h3");
     var h3El2 = document.createElement("h3");
     divElHeader.setAttribute("id","header-div")
     h3El1.textContent = "View High Scores";
-   // h3El2.textContent = "Time Left: " + setTimer;
     h3El2.textContent = "Time Left: "
     body.appendChild(headerEl);
     headerEl.appendChild(divElHeader);
@@ -78,10 +83,7 @@ makeQuestions();
     divElHeader.appendChild(h3El2);
     h3El2.appendChild(spanEl);
     spanEl.textContent = setTimer
-    //divElHeader.style.display = "flex";
-    //divElHeader.style.flexWrap = "wrap";
-    //divElHeader.style.justifyContent = "space-between";
-    //h3El1.addEventListener("click",appendHighScores);
+    //mouse events
     h3El1.addEventListener("mouseover", function(){
         h3El1.style.color = "red";
         h3El1.style.cursor = "pointer";
@@ -90,19 +92,15 @@ makeQuestions();
     h3El1.addEventListener("mouseout", function(){
         h3El1.style.color = "royalblue"
     })
+    //user click will delete start page html and append high scores html
     h3El1.addEventListener("click", function(){
+        //clearInterval needed here in case user clicks view high scores while in the quiz
         clearInterval(timeInterval);
         deleteHTML();
         appendHighScores();
     })
 
 }
-//******************************************************** */
-
-//**************append section****************************** */
-//body.appendChild(sectionEl);
-//******************************************************** */
-
 //******************************************************** */
 
 //**************append start page***************************** */
@@ -118,13 +116,12 @@ function appendStartPage(){
     startH1El.textContent = "Take the JavaScript Quiz";
     startPEl.textContent ="This is a timed Quiz. You will be given 30 seconds to complete.  If you get a question wrong 5 seconds will be deducted from the time remaining.";
     startBtnEl.textContent = "Start Quiz";
-    //startH1El.style.textAlign = "center";
-    //startPEl.style.textAlign = "center";
     startSectionEl.appendChild(startH1El);
     startSectionEl.appendChild(startPEl);
     startSectionEl.appendChild(startBtnEl);
+
+    //click will delete start page html and append quiz html
     startBtnEl.addEventListener("click", function(){
-    //console.log("click of start quiz")
     deleteHTML();
     appendQuiz();
     })
@@ -134,13 +131,9 @@ function appendStartPage(){
 
 //************************************************************ */
 
+//************************************************************ */
+//all buttons will have the same mouseover styling
 function formatButton(btn){
-   // btn.style.backgroundColor = "royalblue";
-    //btn.style.color = "white";
-    //btn.style.padding = "20px";
-    //btn.style.display = "block";
-    //btn.style.margin = "0 auto";
-    //btn.style.borderRadius = "10px";
     btn.addEventListener("mouseover", function(){
     btn.style.backgroundColor = "red";
     btn.style.cursor = "pointer";
@@ -151,13 +144,17 @@ function formatButton(btn){
         
         })
 }
+//*********************************************************** */
 
+//******************deletes html******************************** */
+//function called on user clicks deletes current html so new html can be appended
 function deleteHTML(){
     var sectionDelete = document.querySelector("section");
-   // console.log(sectionDelete);
     sectionDelete.remove();
-
 }
+//********************************************************* */
+
+//*************appends quiz****************************** */
 function appendQuiz(){
     var questionNumber = 1;
     var quizSectionEl = document.createElement("section");
@@ -172,53 +169,46 @@ function appendQuiz(){
     //quizSectionEl.appendChild(quizH1El);
     quizSectionEl.appendChild(quizDivContainer)
     quizDivContainer.appendChild(quizH1El);
-
+    //numMaker used to store answer number in number attribute. 
     var numMaker = 0
+    //for loop used to make div elements that will hold the answers
+    //each div will have the same class but different number values
     for (let i = 0; i < 4; i++){
         var quizDivEl = document.createElement("div");
         quizDivEl.setAttribute("class","quiz-answers");
         quizDivEl.setAttribute("number", ++numMaker);
-        //formatAnswers();
         quizDivContainer.appendChild(quizDivEl);
-        //formatAnswers();
     }
-    //append the element to bottom of divs
+    //will display if user got last question right or wrong
     quizDivContainer.appendChild(quizH2El);
-    //quizH2El.textContent = "Correct";
-
-    //**************************************************** */
-
+   //divEls will be an array of the divs created above
     var divEls = document.querySelectorAll(".quiz-answers");
-     //divEls[1].onclick = function(){console.log(this.getAttribute("number"))} 
-    // console.log(divEls);
+    //loop thru divEls creating mouse events for each one
      for(var i = 0; i < 4; i++){
         var indEl = divEls[i]
          divEls[i].addEventListener("mouseover", function(event){
-            console.log("Mouse over box")
-           // indEl.style.backgroundColor = "red";
+         // get the div currently moused over
           var currentDiv = event.currentTarget;
            currentDiv.style.backgroundColor = "red";
            currentDiv.style.cursor = "pointer";
          })
 
          divEls[i].addEventListener("mouseout", function(event){
-           // console.log("Mouse over box")
-           // indEl.style.backgroundColor = "red";
-          var currentDiv = event.currentTarget;
+           var currentDiv = event.currentTarget;
            currentDiv.style.backgroundColor = "royalblue";
            currentDiv.style.cursor = "pointer";
          })
 
+         //user clicks on answer will call check answer function and then the next question
          divEls[i].addEventListener("click", function(event){
-            //console.log("You clicked me");
             var currentDiv = event.currentTarget;
             var answerNum = currentDiv.getAttribute("number");
-            //answerNum++;
             checkAnswer(answerNum);
             getQuestions(quizH1El,divEls); 
          })
      }
 
+     //gets initial question sets timer and starts timer interval
      getQuestions(quizH1El,divEls);  
      setTimer = 30;
      timeInterval = setInterval(starTimer, 1000);      
@@ -226,13 +216,17 @@ function appendQuiz(){
 
 }
 
+//***************************************************** */
+
+//*************gets the questions************************** */
+
 function getQuestions(quizQuestionEl,quizAnswersEl){
 
-    //var newArr = questions.shift();
-
-   // console.log(newArr)
-   // console.log(newArr.prompt)
-   if(questions.length > 0){
+    //newArr will hold the first value in the questions array and append the 
+    //question and answers to the text of the elements passed in
+    //once there are no more questions the quiz is over and interval is 
+    //cleared the html for the quiz is cleared and the quiz finished html is appended
+  if(questions.length > 0){
         var newArr = questions.shift();
         quizQuestionEl.textContent = newArr.prompt;
         quizAnswersEl[0].textContent = newArr.option1;
@@ -242,25 +236,27 @@ function getQuestions(quizQuestionEl,quizAnswersEl){
         correct = newArr.correctOption;
    }
    else{
-    //console.log(correct)
-
-        clearInterval(timeInterval);
-       // setTimer = 0;
-       // clearQuiz();
+       clearInterval(timeInterval);
        deleteHTML();
        appendFinish();
    }
   
 }
 
+//************************************************* */
+
 //************check answer*****************************
+//will check if answer is correct or wrong the argument passed in is
+//the value of the number attribute in the div that was clicked on
+//it is checked against the value that was stored in the question when it
+//was made if correct win total will be updated.  If wrong timer will be checked
+//if there is less then 5 seconds remaining timer will be set to 0.  This is done
+//to keep the timer from going to negative numbers and not hitting the clearInterval
+//in the setTimer function. if time remaining is > 5 then 5 seconds will be deducted
+//from the timer
 function checkAnswer(num){
     var getH2El = document.querySelector("h2")
-    
-   // alert(getH2El)
-    console.log("Im in the checkAnswer function")
     if(correct == num){
-        //console.log("Correct")
         getH2El.textContent = "Last answer was correct"
         gotRight++;
         lastQuestion = true
@@ -288,11 +284,10 @@ function checkAnswer(num){
 
 //****************timer function*********************** */
 function starTimer(){
-    
-  
+    // countdown the setTimer variable and display it in the span
+    //if timer = 0 quiz is over and appendFinish will be appended
     spanEl.textContent = setTimer;
     setTimer--;
-    console.log(setTimer);
     if(setTimer === 0){
         spanEl.textContent = setTimer;
 
@@ -302,7 +297,7 @@ function starTimer(){
     }
   }
 
-//********************************************************** */
+//****************append finish*************************** */
 
 function appendFinish(){
     var h1El = document.createElement("h1");
@@ -312,10 +307,7 @@ function appendFinish(){
     var h3El2 = document.createElement("H3");
     var textBox = document.createElement("INPUT");
     var divContainerEl = document.createElement("div");
-   // var divCenterEl = document.createElement("div")
-    //divContainerEl.setAttribute("class", "container2")
     divContainerEl.setAttribute("class", "container");
-    //divCenterEl.setAttribute("class", "center")
     textBox.setAttribute("type", "text");
     textBox.setAttribute("maxlength", "3");
     textBox.setAttribute("class", "format-textbox")
@@ -324,24 +316,17 @@ function appendFinish(){
     formatButton(btn)
     body.appendChild(sectionEl);
     sectionEl.appendChild(divContainerEl);
-    //divContainerEl.appendChild(divCenterEl);
-
     divContainerEl.appendChild(h1El);
     divContainerEl.appendChild(h3El);
     divContainerEl.appendChild(textBox);
     divContainerEl.appendChild(btn);
     divContainerEl.appendChild(h3El2)
-
-   // divCenterEl.appendChild(h1El);
-   // divCenterEl.appendChild(h3El);
-    //divCenterEl.appendChild(textBox);
-   // divCenterEl.appendChild(btn);
-   // divCenterEl.appendChild(h3El2)
     h1El.textContent = "Quiz Over";
     h3El.textContent = "You got " + gotRight + " out of 4 correct.  Add your initials to the High Score board.";
     btn.textContent = "Add Score";
     textBox.focus();
 
+    //display on finish page if user got last question they answered correct or wrong
     if(lastQuestion){
         h3El2.textContent = "Last answer was correct";
     }
@@ -351,7 +336,9 @@ function appendFinish(){
     }    
 
 
-
+    //button to add high score to list if array created to store scores from
+    //localstorage is empty we will append the first score to the array
+    //otherwise we will push the next score onto the array
      btn.addEventListener("click", function(){
         var initials = textBox.value;
 
@@ -369,21 +356,14 @@ function appendFinish(){
             }
         )
     }
+    //store scores in localstorage
    localStorage.setItem("scores", JSON.stringify(scores));
 
-
-       // console.log("textbox " + initials);
-       // localStorage.setItem("initials", initials)
-       // localStorage.setItem("score", gotRight)
         deleteHTML();
         appendHighScores()
     
     });
-   // btn.addEventListener("click", function(){
-        //deleteHTML1();
-      //  appendQuiz();
 
-   // });
 }
 
 //*******************make high score***************************//
@@ -402,6 +382,8 @@ function appendHighScores(){
     HighScoreSectionEl.appendChild(HighScoreDivEl);
     HighScoreDivEl.appendChild(HighScoreH1El);
     HighScoreH1El.textContent = "High Scores";
+    // loop thru making elements that will hold the high scores. I am only
+    //going to show the last 5 high scores
     for (let i = 0; i < 5; i++){
         var HighScoreH4El = document.createElement("h4")
         HighScoreH4El.setAttribute("class","high-scores");
@@ -418,8 +400,10 @@ function appendHighScores(){
     HighScoreDivEl.appendChild(HighScorebtnEl2);
 
     var HighScoreH4Els = document.querySelectorAll("h4");
-   // HighScoreH4Els[0].textContent = "MOC: " + "4"
-   // HighScoreH4Els[1].textContent = "abc: " + "2"
+   
+    //store the scores in array  if array is not null put the high scores into
+    //the text area reverse is used to display the latest scores first and older
+    //ones after
    var newArr = JSON.parse(localStorage.getItem("scores"))
    if(newArr != null){
    newArr.reverse();
@@ -429,6 +413,8 @@ function appendHighScores(){
             HighScoreH4Els[i].textContent = newArr[i].init + ": " + newArr[i].scr + " of 4";
         }
     } 
+
+    //user clicks the start over button
     HighScorebtnEl2.addEventListener("click", function(){
     gotRight = 0;
     deleteHTML();
@@ -436,6 +422,8 @@ function appendHighScores(){
     makeQuestions();
    })
 
+   //user clicks the delete high scores button the scores are removed from 
+   //local storate and the text is wiped out.
    HighScorebtnEl1.addEventListener("click", function(){
     for(i = 0; i < 5; i++){
         HighScoreH4Els[i].textContent = "";
