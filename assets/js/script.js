@@ -91,6 +91,7 @@ makeQuestions();
         h3El1.style.color = "royalblue"
     })
     h3El1.addEventListener("click", function(){
+        clearInterval(timeInterval);
         deleteHTML();
         appendHighScores();
     })
@@ -111,6 +112,7 @@ function appendStartPage(){
     var startH1El = document.createElement("h1");
     var startPEl = document.createElement("p");
     var startBtnEl = document.createElement("button");
+    startH1El.setAttribute("class", "format-h1");
     startBtnEl.setAttribute("class", "format-btn");
     formatButton(startBtnEl);
     startH1El.textContent = "Take the JavaScript Quiz";
@@ -167,9 +169,9 @@ function appendQuiz(){
     quizH1El.setAttribute("class", "quiz-question");
     quizDivContainer.setAttribute("class", "container");
     body.appendChild(quizSectionEl);
-    quizSectionEl.appendChild(quizH1El);
+    //quizSectionEl.appendChild(quizH1El);
     quizSectionEl.appendChild(quizDivContainer)
-  
+    quizDivContainer.appendChild(quizH1El);
 
     var numMaker = 0
     for (let i = 0; i < 4; i++){
@@ -310,26 +312,33 @@ function appendFinish(){
     var h3El2 = document.createElement("H3");
     var textBox = document.createElement("INPUT");
     var divContainerEl = document.createElement("div");
-    var divCenterEl = document.createElement("div")
-    divContainerEl.setAttribute("class", "container2")
-    divCenterEl.setAttribute("class", "center")
+   // var divCenterEl = document.createElement("div")
+    //divContainerEl.setAttribute("class", "container2")
+    divContainerEl.setAttribute("class", "container");
+    //divCenterEl.setAttribute("class", "center")
     textBox.setAttribute("type", "text");
     textBox.setAttribute("maxlength", "3");
     textBox.setAttribute("class", "format-textbox")
-    btn.setAttribute("class", "format-btn");
+    btn.setAttribute("class", "format-btn2");
     h3El.setAttribute("class", "format-h3-finish")
     formatButton(btn)
     body.appendChild(sectionEl);
     sectionEl.appendChild(divContainerEl);
-    divContainerEl.appendChild(divCenterEl);
+    //divContainerEl.appendChild(divCenterEl);
 
-    divCenterEl.appendChild(h1El);
-    divCenterEl.appendChild(h3El);
-    divCenterEl.appendChild(textBox);
-    divCenterEl.appendChild(btn);
-    divCenterEl.appendChild(h3El2)
+    divContainerEl.appendChild(h1El);
+    divContainerEl.appendChild(h3El);
+    divContainerEl.appendChild(textBox);
+    divContainerEl.appendChild(btn);
+    divContainerEl.appendChild(h3El2)
+
+   // divCenterEl.appendChild(h1El);
+   // divCenterEl.appendChild(h3El);
+    //divCenterEl.appendChild(textBox);
+   // divCenterEl.appendChild(btn);
+   // divCenterEl.appendChild(h3El2)
     h1El.textContent = "Quiz Over";
-    h3El.textContent = "You got " + gotRight + " out of 4 correct";
+    h3El.textContent = "You got " + gotRight + " out of 4 correct.  Add your initials to the High Score board.";
     btn.textContent = "Add Score";
     textBox.focus();
 
@@ -385,36 +394,42 @@ function appendHighScores(){
     var HighScorebtnEl1 = document.createElement("button");
     var HighScorebtnEl2 = document.createElement("button");
     var HighScoreElBr   = document.createElement("br")
-    HighScorebtnEl1.setAttribute("class", "format-btn");
-    HighScorebtnEl2.setAttribute("class", "format-btn");
+    var HighScoreDivEl = document.createElement("div")
+    HighScoreDivEl.setAttribute("class", "container");
+    HighScorebtnEl1.setAttribute("class", "format-btn2");
+    HighScorebtnEl2.setAttribute("class", "format-btn2");
      body.appendChild(HighScoreSectionEl);
-    HighScoreSectionEl.appendChild(HighScoreH1El);
+    HighScoreSectionEl.appendChild(HighScoreDivEl);
+    HighScoreDivEl.appendChild(HighScoreH1El);
     HighScoreH1El.textContent = "High Scores";
     for (let i = 0; i < 5; i++){
         var HighScoreH4El = document.createElement("h4")
         HighScoreH4El.setAttribute("class","high-scores");
         //formatAnswers();
-        HighScoreSectionEl.appendChild(HighScoreH4El);
+        HighScoreDivEl.appendChild(HighScoreH4El);
         //formatAnswers();
     }
     HighScorebtnEl1.textContent = "Clear High Scores";
     HighScorebtnEl2.textContent = "Start Again";
     formatButton(HighScorebtnEl1);
     formatButton(HighScorebtnEl2);
-    HighScoreSectionEl.appendChild(HighScorebtnEl1);
-    HighScoreSectionEl.appendChild(HighScoreElBr);
-    HighScoreSectionEl.appendChild(HighScorebtnEl2);
+    HighScoreDivEl.appendChild(HighScorebtnEl1);
+    HighScoreDivEl.appendChild(HighScoreElBr);
+    HighScoreDivEl.appendChild(HighScorebtnEl2);
 
     var HighScoreH4Els = document.querySelectorAll("h4");
    // HighScoreH4Els[0].textContent = "MOC: " + "4"
    // HighScoreH4Els[1].textContent = "abc: " + "2"
    var newArr = JSON.parse(localStorage.getItem("scores"))
+   if(newArr != null){
    newArr.reverse();
-   for(i = 0; i < 5 && i < newArr.length; i++){
-    
-    HighScoreH4Els[i].textContent = newArr[i].init + ": " + newArr[i].scr;
-   }
-   HighScorebtnEl2.addEventListener("click", function(){
+   
+        for(i = 0; i < 5 && i < newArr.length; i++){
+            
+            HighScoreH4Els[i].textContent = newArr[i].init + ": " + newArr[i].scr + " of 4";
+        }
+    } 
+    HighScorebtnEl2.addEventListener("click", function(){
     gotRight = 0;
     deleteHTML();
     appendStartPage();
